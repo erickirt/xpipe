@@ -26,7 +26,8 @@ public class MultiIdentityStoreProvider extends IdentityStoreProvider {
     public GuiDialog guiDialog(DataStoreEntry entry, Property<DataStore> store) {
         MultiIdentityStore st = (MultiIdentityStore) store.getValue();
 
-        var initialIdentities = new ArrayList<>(st.getAvailableIdentities());
+        var initialAllIdentities = new ArrayList<>(st.getIdentities());
+        var initialAvailableIdentities = new ArrayList<>(st.getAvailableIdentities());
         var identities = new SimpleListProperty<>(FXCollections.observableArrayList(st.getAvailableIdentities()));
         var perUser = new SimpleBooleanProperty(st.isPerUser());
 
@@ -47,24 +48,31 @@ public class MultiIdentityStoreProvider extends IdentityStoreProvider {
                 .disable(DataStorageUserHandler.getInstance().getActiveUser() == null)
                 .bind(
                         () -> {
-                            var uuids = new LinkedHashSet<UUID>();
-                            for (DataStoreEntryRef<IdentityStore> identity : identities) {
-                                uuids.add(identity.get().getUuid());
+                            // User made no changes in GUI
+                            if (identities.getValue().equals(st.getAvailableIdentities())) {
+                                return MultiIdentityStore.builder()
+                                        .identities(st.getIdentities())
+                                        .perUser(perUser.get())
+                                        .build();
                             }
-                            for (UUID storeIdentity : st.getIdentities()) {
-                                if (initialIdentities.stream()
-                                        .anyMatch(ref -> ref.get().getUuid().equals(storeIdentity))) {
-                                    var wasRemoved = identities.stream()
-                                            .noneMatch(
-                                                    ref -> ref.get().getUuid().equals(storeIdentity));
-                                    if (!wasRemoved) {
-                                        uuids.add(storeIdentity);
-                                    }
+
+                            var all = new ArrayList<UUID>();
+                            // All currently selected ones are added
+                            for (DataStoreEntryRef<IdentityStore> identity : identities) {
+                                all.add(identity.get().getUuid());
+                            }
+
+                            // Include non-available ones
+                            for (UUID storeIdentity : initialAllIdentities) {
+                                var isAvailable = initialAvailableIdentities.stream()
+                                        .anyMatch(ref -> ref.get().getUuid().equals(storeIdentity));
+                                if (!isAvailable) {
+                                    all.add(storeIdentity);
                                 }
                             }
 
                             return MultiIdentityStore.builder()
-                                    .identities(new ArrayList<>(uuids))
+                                    .identities(all)
                                     .perUser(perUser.get())
                                     .build();
                         },
