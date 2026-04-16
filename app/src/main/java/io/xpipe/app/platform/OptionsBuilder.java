@@ -182,6 +182,7 @@ public class OptionsBuilder {
         var pane = new SimpleTitledPaneComp(AppI18n.observable(key), subComp, true);
         pane.apply(struc -> struc.setExpanded(false));
         this.comp = pane;
+        this.lastCompHeadReference = comp;
         return this;
     }
 
