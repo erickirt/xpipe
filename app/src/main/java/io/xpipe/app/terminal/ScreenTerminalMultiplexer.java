@@ -1,9 +1,6 @@
 package io.xpipe.app.terminal;
 
-import io.xpipe.app.process.CommandSupport;
-import io.xpipe.app.process.ScriptHelper;
-import io.xpipe.app.process.ShellControl;
-import io.xpipe.app.process.ShellScript;
+import io.xpipe.app.process.*;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Builder;
@@ -24,6 +21,11 @@ public class ScreenTerminalMultiplexer implements TerminalMultiplexer {
     @Override
     public String getDocsLink() {
         return "https://www.gnu.org/software/screen/manual/screen.html";
+    }
+
+    @Override
+    public boolean shouldSelect() throws Exception {
+        return false;
     }
 
     @Override

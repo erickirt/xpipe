@@ -2,6 +2,7 @@ package io.xpipe.app.terminal;
 
 import io.xpipe.app.prefs.AppPrefs;
 import io.xpipe.app.process.CommandSupport;
+import io.xpipe.app.process.LocalShell;
 import io.xpipe.app.process.ShellControl;
 import io.xpipe.app.process.ShellScript;
 
@@ -25,6 +26,11 @@ public class TmuxTerminalMultiplexer implements TerminalMultiplexer {
     @Override
     public String getDocsLink() {
         return "https://github.com/tmux/tmux/wiki/Getting-Started";
+    }
+
+    @Override
+    public boolean shouldSelect() throws Exception {
+        return LocalShell.getShell().view().findProgram("tmux").isPresent();
     }
 
     @Override

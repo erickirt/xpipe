@@ -1,9 +1,13 @@
 package io.xpipe.app.terminal;
 
+import io.xpipe.app.issue.ErrorEvent;
+import io.xpipe.app.issue.ErrorEventFactory;
+import io.xpipe.app.process.LocalShell;
 import io.xpipe.app.process.ShellControl;
 import io.xpipe.app.process.ShellScript;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.xpipe.core.OsType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +23,34 @@ public interface TerminalMultiplexer {
         return l;
     }
 
+    static TerminalMultiplexer determineDefault(TerminalMultiplexer existing) {
+        if (OsType.ofLocal() == OsType.WINDOWS) {
+            return existing;
+        }
+
+        try {
+            if (existing != null && existing.shouldSelect()) {
+                return existing;
+            }
+
+            var all = List.of(new TmuxTerminalMultiplexer(), new ZellijTerminalMultiplexer(), new ScreenTerminalMultiplexer());
+            for (TerminalMultiplexer terminalMultiplexer : all) {
+                if (terminalMultiplexer.shouldSelect()) {
+                    return terminalMultiplexer;
+                }
+            }
+        } catch (Exception e) {
+            ErrorEventFactory.fromThrowable(e).handle();
+        }
+
+        return null;
+    }
+
     boolean supportsSplitView();
 
     String getDocsLink();
+
+    boolean shouldSelect() throws Exception;
 
     void checkSupported(ShellControl sc) throws Exception;
 

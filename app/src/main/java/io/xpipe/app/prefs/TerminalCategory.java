@@ -168,7 +168,7 @@ public class TerminalCategory extends AppPrefsCategory {
                 .sub(terminalChoice(true))
                 .sub(terminalPrompt())
                 .sub(terminalProxy())
-                .sub(terminalMultiplexer())
+                .sub(terminalMultiplexerChoice())
                 // .sub(terminalInitScript())
                 .title("sessionLogging")
                 .sub(new OptionsBuilder()
@@ -281,7 +281,7 @@ public class TerminalCategory extends AppPrefsCategory {
                         prefs.terminalInitScript);
     }
 
-    private OptionsBuilder terminalMultiplexer() {
+    public static OptionsBuilder terminalMultiplexerChoice() {
         var prefs = AppPrefs.get();
         var choiceBuilder = OptionsChoiceBuilder.builder()
                 .property(prefs.terminalMultiplexer)
@@ -310,7 +310,7 @@ public class TerminalCategory extends AppPrefsCategory {
                 })
                 .build();
         var choice = choiceBuilder.build().buildComp();
-        choice.maxWidth(getCompWidth());
+        choice.maxWidth(600);
         var options = new OptionsBuilder()
                 .name("terminalMultiplexer")
                 .description(

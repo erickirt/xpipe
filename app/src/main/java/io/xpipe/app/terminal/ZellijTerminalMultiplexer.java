@@ -30,6 +30,11 @@ public class ZellijTerminalMultiplexer implements TerminalMultiplexer {
     }
 
     @Override
+    public boolean shouldSelect() throws Exception {
+        return LocalShell.getShell().view().findProgram("zellij").isPresent();
+    }
+
+    @Override
     public void checkSupported(ShellControl sc) throws Exception {
         CommandSupport.isInPathOrThrow(sc, "zellij");
     }

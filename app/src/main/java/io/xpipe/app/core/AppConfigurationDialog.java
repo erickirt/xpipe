@@ -6,12 +6,10 @@ import io.xpipe.app.comp.base.ScrollComp;
 import io.xpipe.app.core.window.AppDialog;
 import io.xpipe.app.platform.OptionsBuilder;
 import io.xpipe.app.platform.PlatformState;
-import io.xpipe.app.prefs.EditorCategory;
-import io.xpipe.app.prefs.PasswordManagerCategory;
-import io.xpipe.app.prefs.PersonalizationCategory;
-import io.xpipe.app.prefs.TerminalCategory;
+import io.xpipe.app.prefs.*;
 import io.xpipe.app.util.DocumentationLink;
 
+import io.xpipe.core.OsType;
 import javafx.application.Platform;
 import javafx.scene.layout.Region;
 
@@ -32,14 +30,20 @@ public class AppConfigurationDialog {
             var options = new OptionsBuilder()
                     .sub(PersonalizationCategory.languageChoice())
                     .sub(PersonalizationCategory.themeChoice())
-                    .sub(TerminalCategory.terminalChoice(false))
+                    .sub(TerminalCategory.terminalChoice(false));
+
+            if (OsType.ofLocal() != OsType.WINDOWS && AppPrefs.get().terminalMultiplexer().getValue() != null) {
+                options.sub(TerminalCategory.terminalMultiplexerChoice());
+            }
+
+            var optionsComp = options
                     .sub(EditorCategory.editorChoice())
                     .sub(PasswordManagerCategory.passwordManagerChoice())
                     .buildComp();
-            options.style("initial-setup");
-            options.style("prefs-container");
+            optionsComp.style("initial-setup");
+            optionsComp.style("prefs-container");
 
-            var scroll = new ScrollComp(options);
+            var scroll = new ScrollComp(optionsComp);
             scroll.apply(struc -> {
                 struc.prefHeightProperty().bind(((Region) struc.getContent()).heightProperty());
             });

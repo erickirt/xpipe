@@ -849,6 +849,7 @@ public final class AppPrefs {
         spiceClient.setValue(ExternalSpiceClient.determineDefault(spiceClient.getValue()));
         vncClient.setValue(ExternalVncClient.determineDefault(vncClient.getValue()));
         passwordManager.setValue(PasswordManager.determineDefault(passwordManager.getValue()));
+        terminalMultiplexer.setValue(TerminalMultiplexer.determineDefault(terminalMultiplexer.getValue()));
 
         PrefsProvider.getAll().forEach(prov -> prov.initDefaultValues());
     }
