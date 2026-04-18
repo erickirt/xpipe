@@ -563,8 +563,11 @@ public final class BrowserFileListComp extends SimpleRegionBuilder {
                                         .equals(updatedEntry.getRawFileEntry().getPath()))
                                 .findFirst();
                         if (found.isPresent()) {
-                            table.refresh();
-                            table.getItems().set(table.getItems().indexOf(found.get()), updatedEntry);
+                            var index = table.getItems().indexOf(found.get());
+                            if (index != -1) {
+                                table.refresh();
+                                table.getItems().set(index, updatedEntry);
+                            }
                             return;
                         }
                     }
