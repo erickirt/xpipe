@@ -5,6 +5,8 @@ import io.xpipe.app.process.ShellControl;
 import io.xpipe.app.process.ShellDialect;
 import io.xpipe.app.process.ShellTemp;
 import io.xpipe.app.process.ShellTerminalInitCommand;
+import io.xpipe.app.storage.DataStorage;
+import io.xpipe.app.storage.DataStoreEntry;
 import io.xpipe.core.FilePath;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -45,9 +47,11 @@ public interface TerminalPrompt {
                 checkCanInstall(sc);
                 install(sc);
             } catch (Exception e) {
+                var name = sc.getSourceStoreId().flatMap(uuid -> DataStorage.get().getStoreEntryIfPresent(uuid))
+                        .map(DataStoreEntry::getName).orElse(null);
                 ErrorEventFactory.fromThrowable(e)
                         .omit()
-                        .description("Prompt installation for " + getId() + " failed on remote system")
+                        .description("Prompt installation for " + getId() + " failed on remote system" + (name != null ? " " + name : ""))
                         .expected()
                         .handle();
                 return false;

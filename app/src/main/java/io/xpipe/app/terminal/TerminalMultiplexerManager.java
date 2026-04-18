@@ -4,8 +4,6 @@ import io.xpipe.app.prefs.AppPrefs;
 import io.xpipe.app.util.ThreadHelper;
 import io.xpipe.core.OsType;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.*;
 
 public class TerminalMultiplexerManager {
@@ -65,7 +63,7 @@ public class TerminalMultiplexerManager {
         return Optional.of(multiplexer);
     }
 
-    public static void synchronizeMultiplexerLaunchTiming() {
+    public static void waitForMultiplexerStartup() {
         var mult = getEffectiveMultiplexer();
         if (mult.isEmpty()) {
             return;
@@ -73,9 +71,12 @@ public class TerminalMultiplexerManager {
 
         // Wait if we are currently opening a new multiplexer
         if (pendingMultiplexerLaunch != null) {
-            // Wait for max 10s
-            for (int i = 0; i < 100; i++) {
+            // Wait for max 30s
+            // Multiplexer launches in WSL may take a while
+            for (int i = 0; i < 300; i++) {
                 if (pendingMultiplexerLaunch == null) {
+                    // Give it a bit more time if it just started
+                    ThreadHelper.sleep(1000);
                     break;
                 }
 

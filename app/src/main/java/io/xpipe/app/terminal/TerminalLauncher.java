@@ -181,15 +181,18 @@ public class TerminalLauncher {
         }
 
         if (effectivePreferTabs) {
+            // There will be timing issues when launching multiple tabs in a short time span
+            TerminalMultiplexerManager.waitForMultiplexerStartup();
+
             // Synchronize between multiple existing tab launches as some terminals and multiplexers might break there
-            var elapsed = Duration.between(lastLaunch, Instant.now()).toMillis();
+            long elapsed;
+            synchronized (TerminalLauncher.class) {
+                elapsed = Duration.between(lastLaunch, Instant.now()).toMillis();
+                lastLaunch = Instant.now();
+            }
             if (elapsed < 1000) {
                 ThreadHelper.sleep(1000 - elapsed);
             }
-            lastLaunch = Instant.now();
-
-            // There will be timing issues when launching multiple tabs in a short time span
-            TerminalMultiplexerManager.synchronizeMultiplexerLaunchTiming();
 
             // Track sessions that are used for the multiplexer
             // Used to figure out when it dies
