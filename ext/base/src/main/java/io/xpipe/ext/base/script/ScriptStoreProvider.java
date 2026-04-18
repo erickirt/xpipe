@@ -46,7 +46,7 @@ public class ScriptStoreProvider implements DataStoreProvider {
         });
 
         var checkbox = new CheckBoxComp(enabled, null, null);
-        checkbox.describe(d -> d.nameKey("enabled"));
+        checkbox.describe(d -> d.nameKey("toggleEnabled"));
         enabled.addListener((observable, oldValue, newValue) -> {
             ScriptStore st = sec.getWrapper().getEntry().getStore().asNeeded();
             var state = st.getState().toBuilder().enabled(newValue).build();

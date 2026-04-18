@@ -8,6 +8,7 @@ import io.xpipe.app.process.ShellControl;
 import io.xpipe.app.process.ShellScript;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.xpipe.app.update.AppDistributionType;
 import io.xpipe.core.OsType;
 
 import java.util.ArrayList;
@@ -25,11 +26,7 @@ public interface TerminalMultiplexer {
     }
 
     static TerminalMultiplexer determineDefault(TerminalMultiplexer existing) {
-        if (!AppProperties.get().isInitialLaunch()) {
-            return existing;
-        }
-
-        if (OsType.ofLocal() == OsType.WINDOWS) {
+        if (!AppProperties.get().isInitialLaunch() || OsType.ofLocal() == OsType.WINDOWS || AppDistributionType.get() == AppDistributionType.WEBTOP) {
             return existing;
         }
 

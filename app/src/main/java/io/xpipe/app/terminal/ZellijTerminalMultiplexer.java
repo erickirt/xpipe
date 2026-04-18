@@ -48,8 +48,8 @@ public class ZellijTerminalMultiplexer implements TerminalMultiplexer {
                 "zellij attach --create-background xpipe",
                 "zellij -s xpipe action new-tab --name \"" + escape(config.getColoredTitle(), false, true) + "\"",
                 "zellij -s xpipe action write-chars -- " + escape(" " + firstCommand, true, true) + "\\;exit",
-                "zellij -s xpipe action write 10",
-                "zellij -s xpipe action clear"));
+                "zellij -s xpipe action clear",
+                "zellij -s xpipe action write 10"));
 
         if (config.getPanes().size() > 1) {
             var splitIterator =
@@ -69,8 +69,8 @@ public class ZellijTerminalMultiplexer implements TerminalMultiplexer {
                                 + escape(config.getPanes().get(i).getTitle(), false, true)
                                 + "\"",
                         "zellij -s xpipe action write-chars -- " + escape(" " + iCommand, true, true) + "\\;exit",
-                        "zellij -s xpipe action write 10",
                         "zellij -s xpipe action clear",
+                        "zellij -s xpipe action write 10",
                         "zellij -s xpipe action focus-next-pane"));
                 splitIterator.next();
             }
@@ -120,8 +120,8 @@ public class ZellijTerminalMultiplexer implements TerminalMultiplexer {
                 "zellij -s xpipe action go-to-tab 2",
                 "sleep 0.5",
                 "zellij -s xpipe action write-chars -- " + escape(" " + firstCommand, true, true) + "\\;exit",
-                "zellij -s xpipe action write 10",
                 "zellij -s xpipe action clear",
+                "zellij -s xpipe action write 10",
                 "zellij -s xpipe action go-to-tab 1",
                 "zellij -s xpipe action close-tab"));
 
@@ -140,8 +140,8 @@ public class ZellijTerminalMultiplexer implements TerminalMultiplexer {
                         "zellij -s xpipe action new-pane " + directionString + " --name \""
                                 + escape(config.getPanes().get(i).getTitle(), false, true) + "\"",
                         "zellij -s xpipe action write-chars -- " + escape(" " + iCommand, true, true) + "\\;exit",
-                        "zellij -s xpipe action write 10",
                         "zellij -s xpipe action clear",
+                        "zellij -s xpipe action write 10",
                         "zellij -s xpipe action focus-next-pane"));
                 splitIterator.next();
             }

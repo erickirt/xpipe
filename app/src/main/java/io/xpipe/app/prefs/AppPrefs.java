@@ -280,7 +280,7 @@ public final class AppPrefs {
             .valueClass(UUID.class)
             .requiresRestart(false)
             .build());
-    final Property<TerminalMultiplexer> terminalMultiplexer = map(Mapping.builder()
+    final ObjectProperty<TerminalMultiplexer> terminalMultiplexer = map(Mapping.builder()
             .property(new GlobalObjectProperty<>(null))
             .key("terminalMultiplexer")
             .valueClass(TerminalMultiplexer.class)
