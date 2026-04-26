@@ -65,8 +65,7 @@ public class PasswordManagerIdentityStoreProvider extends IdentityStoreProvider 
         var hideSshKeyChoice = Bindings.createBooleanBinding(
                 () -> {
                     var pwman = AppPrefs.get().passwordManager().getValue();
-                    var strat = pwman.getKeyConfiguration();
-                    return strat.useInline() && sshKey.get() == null;
+                    return pwman == null || pwman.getKeyConfiguration().useInline() && sshKey.get() == null;
                 },
                 AppPrefs.get().passwordManager(),
                 sshKey);
